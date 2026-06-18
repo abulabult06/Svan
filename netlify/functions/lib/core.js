@@ -1,20 +1,30 @@
 // Core engine for the RSI Divergence + Market Structure strategy.
 // Shared by both netlify/functions/scan.js (scheduled) and scan-now.js (manual trigger).
 
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
 
-const MAX_SYMBOLS = 30;        // how many top-volume USDT pairs to watch
-const CONCURRENCY = 8;         // symbols processed in parallel per batch
+const MAX_SYMBOLS = 20;        // how many top-volume USDT pairs to watch
+const CONCURRENCY = 10;        // symbols processed in parallel per batch
 const EXCLUDE_SUFFIX = /(UP|DOWN|BULL|BEAR)USDT$/;
 const STABLE_PAIRS = new Set(['USDCUSDT', 'FDUSDUSDT', 'BUSDUSDT', 'TUSDUSDT', 'DAIUSDT', 'USDPUSDT']);
 
 // ---------- Supabase ----------
 
+// Netlify's current function runtime exposes a global `Netlify.env` object.
+// Falling back to process.env keeps this working in any Node context too.
+function getEnv(key) {
+  if (typeof Netlify !== 'undefined' && Netlify && Netlify.env && typeof Netlify.env.get === 'function') {
+    const v = Netlify.env.get(key);
+    if (v) return v;
+  }
+  return process.env[key];
+}
+
 let _client = null;
 function getSupabaseClient() {
   if (!_client) {
-    const url = process.env.SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const url = getEnv('SUPABASE_URL');
+    const key = getEnv('SUPABASE_SERVICE_ROLE_KEY');
     if (!url || !key) {
       throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables');
     }
@@ -333,4 +343,4 @@ async function runScan(trigger = 'scheduled') {
   }
 }
 
-module.exports = { runScan };
+export { runScan };
