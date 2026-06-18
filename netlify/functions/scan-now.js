@@ -1,13 +1,21 @@
-const { runScan } = require('./lib/core');
+import { runScan } from './lib/core.js';
 
-exports.handler = async (event) => {
-  const headers = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' };
-  if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
+export default async () => {
   try {
     const result = await runScan('manual');
-    return { statusCode: 200, headers, body: JSON.stringify(result) };
+    return new Response(JSON.stringify(result), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (err) {
     console.error('Manual scan failed:', err);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: String((err && err.message) || err) }) };
+    return new Response(JSON.stringify({ error: String((err && err.message) || err) }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
+};
+
+export const config = {
+  path: '/api/scan-now',
 };
