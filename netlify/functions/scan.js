@@ -1,11 +1,20 @@
-const { runScan } = require('./lib/core');
+import { runScan } from './lib/core.js';
 
-exports.handler = async () => {
+export default async () => {
   try {
     const result = await runScan('scheduled');
-    return { statusCode: 200, body: JSON.stringify(result) };
+    return new Response(JSON.stringify(result), {
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (err) {
     console.error('Scheduled scan failed:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: String((err && err.message) || err) }) };
+    return new Response(JSON.stringify({ error: String((err && err.message) || err) }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
+};
+
+export const config = {
+  schedule: '*/15 * * * *',
 };
