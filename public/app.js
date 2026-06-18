@@ -115,12 +115,26 @@ document.getElementById('filterbar').addEventListener('click', (e) => {
 
 document.getElementById('scanBtn').addEventListener('click', async () => {
   const btn = document.getElementById('scanBtn');
+  const status = document.getElementById('scanStatus');
   btn.disabled = true;
   btn.textContent = 'Scanning…';
+  status.textContent = '';
+  status.className = 'scan-status';
   try {
-    await fetch('/api/scan-now');
+    const res = await fetch('/api/scan-now');
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = null; }
+    if (!res.ok) {
+      status.textContent = `Scan failed (${res.status}): ${(data && data.error) || text || 'unknown error'}`;
+      status.className = 'scan-status error';
+    } else {
+      status.textContent = `Scanned ${data.scanned} pairs, ${data.signals} signal(s) found.`;
+      status.className = 'scan-status ok';
+    }
   } catch (e) {
-    console.error(e);
+    status.textContent = `Could not reach the scanner: ${e.message}`;
+    status.className = 'scan-status error';
   } finally {
     await loadSignals();
     await loadLastRun();
