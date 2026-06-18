@@ -1,0 +1,16 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Runs the full scan automatically every 15 minutes
+[functions."scan"]
+  schedule = "*/15 * * * *"
+
+# Lets the dashboard call /api/scan-now instead of the long Netlify function URL
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
