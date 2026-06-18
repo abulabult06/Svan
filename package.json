@@ -1,0 +1,9 @@
+{
+  "name": "crypto-scanner-rakib",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RSI Divergence + Market Structure crypto scanner (Binance -> Supabase -> Netlify)",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4"
+  }
+}
