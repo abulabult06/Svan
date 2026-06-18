@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSI Divergence Scanner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="status">
+      <span class="dot"></span>
+      <span class="eyebrow">LIVE</span>
+    </div>
+    <h1>RSI Divergence Scanner</h1>
+    <time id="clock" class="clock"></time>
+  </header>
+  <p class="subtitle">Binance &middot; Weekly &rarr; Daily &rarr; 4H &middot; <span id="symbolCount">--</span> pairs watched</p>
+
+  <div class="controlbar">
+    <div class="lastscan">Last scan: <span id="lastScan">--</span></div>
+    <button id="scanBtn" class="scan-btn">Scan now</button>
+  </div>
+
+  <div class="filterbar" id="filterbar">
+    <button class="filter active" data-grade="all">All</button>
+    <button class="filter" data-grade="A+">A+</button>
+    <button class="filter" data-grade="A">A</button>
+    <button class="filter" data-grade="B">B</button>
+  </div>
+
+  <div id="signalList" class="signal-list">
+    <div class="empty-state">Loading signals&hellip;</div>
+  </div>
+
+  <footer class="foot">
+    <p>তোমার নিজের RSI Divergence স্ক্যানার — Binance ডেটা থেকে, প্রতি ১৫ মিনিটে অটো-রিফ্রেশ হয়।</p>
+  </footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
